@@ -1,0 +1,10 @@
+name: CyberCapture
+version: 1.0.0-DEV
+author: ZugPilot
+description: CyberCapture recode
+main: de.zugpilot.cybercapture.CyberPlugin
+api-version: 1.18
+
+
+commands:
+  cdebug:
