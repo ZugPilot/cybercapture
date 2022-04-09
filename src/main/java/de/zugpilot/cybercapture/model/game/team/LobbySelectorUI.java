@@ -14,7 +14,7 @@ public class LobbySelectorUI extends UI {
     private final CyberPlayer cyberPlayer;
 
     public LobbySelectorUI(CyberGame cyberGame, CyberPlayer cyberPlayer) {
-        super(cyberGame, "§aSelect your team", 3);
+        super(cyberGame, "§aWähle dein Team aus", 3);
         this.cyberPlayer = cyberPlayer;
     }
 

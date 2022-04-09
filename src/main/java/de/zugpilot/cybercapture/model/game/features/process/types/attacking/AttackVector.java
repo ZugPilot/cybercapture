@@ -1,4 +1,4 @@
-package de.zugpilot.cybercapture.model.game.features.computer.process.types.attacking;
+package de.zugpilot.cybercapture.model.game.features.process.types.attacking;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

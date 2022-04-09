@@ -1,7 +1,7 @@
-package de.zugpilot.cybercapture.model.game.features.computer.process.types.protecting;
+package de.zugpilot.cybercapture.model.game.features.process.types.protecting;
 
-import de.zugpilot.cybercapture.model.game.features.computer.process.AbstractCyberProcess;
-import de.zugpilot.cybercapture.model.game.features.computer.process.CyberProcessType;
+import de.zugpilot.cybercapture.model.game.features.process.AbstractCyberProcess;
+import de.zugpilot.cybercapture.model.game.features.process.CyberProcessType;
 import lombok.Getter;
 import org.bukkit.Material;
 

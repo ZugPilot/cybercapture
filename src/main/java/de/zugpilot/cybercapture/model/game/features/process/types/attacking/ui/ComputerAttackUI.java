@@ -1,7 +1,7 @@
-package de.zugpilot.cybercapture.model.game.features.computer.process.types.attacking.ui;
+package de.zugpilot.cybercapture.model.game.features.process.types.attacking.ui;
 
 import de.zugpilot.cybercapture.model.game.CyberGame;
-import de.zugpilot.cybercapture.model.game.features.computer.process.types.attacking.AttackVector;
+import de.zugpilot.cybercapture.model.game.features.process.types.attacking.AttackVector;
 import de.zugpilot.cybercapture.ui.SubUI;
 import de.zugpilot.cybercapture.ui.UI;
 import de.zugpilot.cybercapture.ui.element.impl.ClickableUIElement;

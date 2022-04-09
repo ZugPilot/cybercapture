@@ -1,8 +1,7 @@
 package de.zugpilot.cybercapture.model.game.team;
 
 import de.zugpilot.cybercapture.model.game.CyberGame;
-import de.zugpilot.cybercapture.model.game.GameState;
-import de.zugpilot.cybercapture.model.game.features.computer.Computer;
+import de.zugpilot.cybercapture.model.game.features.Computer;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
 import lombok.Getter;
 import lombok.Setter;

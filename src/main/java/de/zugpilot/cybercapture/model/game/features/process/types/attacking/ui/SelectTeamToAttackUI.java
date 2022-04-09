@@ -1,9 +1,7 @@
-package de.zugpilot.cybercapture.model.game.features.computer.process.types.attacking.ui;
+package de.zugpilot.cybercapture.model.game.features.process.types.attacking.ui;
 
-import de.zugpilot.cybercapture.CyberConstants;
-import de.zugpilot.cybercapture.CyberPlugin;
 import de.zugpilot.cybercapture.model.game.CyberGame;
-import de.zugpilot.cybercapture.model.game.features.computer.process.types.attacking.AttackingProcess;
+import de.zugpilot.cybercapture.model.game.features.process.types.attacking.AttackingProcess;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
 import de.zugpilot.cybercapture.model.game.team.CyberTeam;
 import de.zugpilot.cybercapture.ui.SubUI;
@@ -33,9 +31,8 @@ public class SelectTeamToAttackUI extends SubUI
                 if(optional.isEmpty())return;
                 CyberPlayer cyberPlayer = optional.get();
                 if(cyberPlayer.getTeam().isEmpty())return;
-                if(team.getComputer().attemptRunProcess(cyberPlayer, cyberPlayer.getTeam().get(), attackingProcess)){
-                    close(player);
-                }
+                attackingProcess.setSource(Optional.of(cyberPlayer));
+                cyberPlayer.getTeam().get().getComputer().runProcess(team.getComputer(), attackingProcess);
             }));
             ++i;
         }

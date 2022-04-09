@@ -1,13 +1,17 @@
-package de.zugpilot.cybercapture.model.game.features.computer.process.types.attacking;
+package de.zugpilot.cybercapture.model.game.features.process.types.attacking;
 
-import de.zugpilot.cybercapture.model.game.features.computer.Computer;
+import de.zugpilot.cybercapture.model.game.features.Computer;
 import lombok.Getter;
 import org.bukkit.Material;
 
 @Getter
 public abstract class DamagingAttackingProcess extends AttackingProcess {
+
+    private final double processDamage;
+
     public DamagingAttackingProcess(AttackVector attackVector, String coloredProcessName, double processCost, long processDuration, Material processIcon, double processDamage, String... processDescription) {
-        super(attackVector, coloredProcessName, processCost, processDuration, processIcon, processDamage, processDescription);
+        super(attackVector, coloredProcessName, processCost, processDuration, processIcon, processDescription);
+        this.processDamage = processDamage;
     }
 
     @Override

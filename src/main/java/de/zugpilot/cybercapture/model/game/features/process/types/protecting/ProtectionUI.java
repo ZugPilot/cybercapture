@@ -1,12 +1,9 @@
-package de.zugpilot.cybercapture.model.game.features.computer.process.types.protecting;
+package de.zugpilot.cybercapture.model.game.features.process.types.protecting;
 
 import de.zugpilot.cybercapture.model.game.CyberGame;
-import de.zugpilot.cybercapture.model.game.features.computer.process.AbstractCyberProcess;
-import de.zugpilot.cybercapture.model.game.features.computer.process.CyberProcessType;
-import de.zugpilot.cybercapture.model.game.features.computer.process.types.attacking.AttackingProcess;
-import de.zugpilot.cybercapture.model.game.features.computer.process.types.attacking.ui.SelectTeamToAttackUI;
+import de.zugpilot.cybercapture.model.game.features.process.AbstractCyberProcess;
+import de.zugpilot.cybercapture.model.game.features.process.CyberProcessType;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
-import de.zugpilot.cybercapture.model.game.team.CyberTeam;
 import de.zugpilot.cybercapture.ui.SubUI;
 import de.zugpilot.cybercapture.ui.UI;
 import de.zugpilot.cybercapture.ui.element.impl.ClickableUIElement;
@@ -32,9 +29,8 @@ public class ProtectionUI extends SubUI {
                 if(optional.isEmpty())return;
                 CyberPlayer cyberPlayer = optional.get();
                 if(cyberPlayer.getTeam().isEmpty())return;
-                if(cyberPlayer.getTeam().get().getComputer().attemptRunProcess(cyberPlayer, cyberPlayer.getTeam().get(), protectingProcess)){
-                    close(player);
-                }
+                protectingProcess.setSource(Optional.of(cyberPlayer));
+                cyberPlayer.getTeam().get().getComputer().runProcess(cyberPlayer.getTeam().get().getComputer(), protectingProcess);
             }));
             ++i;
         }

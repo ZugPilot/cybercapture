@@ -4,7 +4,7 @@ import de.zugpilot.cybercapture.CyberPlugin;
 import de.zugpilot.cybercapture.commands.DebugCommand;
 import de.zugpilot.cybercapture.listener.GameJoinLeaveListener;
 import de.zugpilot.cybercapture.listener.LobbyListener;
-import de.zugpilot.cybercapture.model.game.features.computer.process.CyberProcessRegistry;
+import de.zugpilot.cybercapture.model.game.features.process.CyberProcessRegistry;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayerRegistry;
 import de.zugpilot.cybercapture.model.game.team.CyberTeamRegistry;
 import de.zugpilot.cybercapture.ui.UIHandler;
