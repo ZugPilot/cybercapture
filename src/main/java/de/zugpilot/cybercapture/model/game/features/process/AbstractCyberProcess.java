@@ -2,6 +2,7 @@ package de.zugpilot.cybercapture.model.game.features.process;
 
 import de.zugpilot.cybercapture.model.game.features.Computer;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
+import de.zugpilot.cybercapture.model.game.team.CyberTeam;
 import de.zugpilot.cybercapture.utils.ItemBuilder;
 import lombok.Getter;
 import lombok.Setter;
@@ -16,9 +17,9 @@ import java.util.Optional;
 
 @Getter
 @Setter
-public abstract class AbstractCyberProcess implements CyberProcess {
+public abstract class AbstractCyberProcess implements CyberProcess, Cloneable {
 
-    private final CyberProcessType cyberProcessType;
+    private final CyberProcessCategory cyberProcessCategory;
     private final String processName;
     private final String coloredProcessName;
     private final double processCost;
@@ -28,10 +29,10 @@ public abstract class AbstractCyberProcess implements CyberProcess {
     private final List<String> processDescription;
 
     private long processStartTimeStamp;
-    private Optional<CyberPlayer> source;
+    private Optional<CyberTeam> source;
 
-    public AbstractCyberProcess(CyberProcessType cyberProcessType, String coloredProcessName, double processCost, long processDuration, Material processIcon, String... processDescription) {
-        this.cyberProcessType = cyberProcessType;
+    public AbstractCyberProcess(CyberProcessCategory cyberProcessCategory, String coloredProcessName, double processCost, long processDuration, Material processIcon, String... processDescription) {
+        this.cyberProcessCategory = cyberProcessCategory;
         this.processName = ChatColor.stripColor(coloredProcessName);
         this.coloredProcessName = coloredProcessName;
         this.processCost = processCost;
@@ -58,7 +59,8 @@ public abstract class AbstractCyberProcess implements CyberProcess {
 
     @Override
     public boolean tick(Computer computer) {
-        return System.currentTimeMillis() > processDuration * 1000;
+        if(processDuration == -1)return false; //Infinite running processes
+        return System.currentTimeMillis() > processStartTimeStamp + processDuration * 1000; //Current bigger than past + runtime in seconds
     }
 
     /*
@@ -69,6 +71,15 @@ public abstract class AbstractCyberProcess implements CyberProcess {
         String[] lore = new String[this.processDescription.size()];
         this.processDescription.toArray(lore);
         this.processIcon = new ItemBuilder(this.processIconMaterial).displayName(this.coloredProcessName).setLore(lore).build();
+    }
+
+    @Override
+    public AbstractCyberProcess clone() {
+        try {
+            return (AbstractCyberProcess) super.clone();
+        }catch (CloneNotSupportedException e){
+            return null;
+        }
     }
 
 }

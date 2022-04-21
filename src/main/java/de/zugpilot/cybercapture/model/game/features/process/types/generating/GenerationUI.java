@@ -1,10 +1,12 @@
 package de.zugpilot.cybercapture.model.game.features.process.types.generating;
 
 import de.zugpilot.cybercapture.model.game.CyberGame;
+import de.zugpilot.cybercapture.model.game.features.Computer;
+import de.zugpilot.cybercapture.model.game.features.ComputerSubUI;
 import de.zugpilot.cybercapture.model.game.features.process.AbstractCyberProcess;
-import de.zugpilot.cybercapture.model.game.features.process.CyberProcessType;
+import de.zugpilot.cybercapture.model.game.features.process.CyberProcessCategory;
+import de.zugpilot.cybercapture.model.game.features.process.CyberProcessEnum;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
-import de.zugpilot.cybercapture.model.game.team.CyberTeam;
 import de.zugpilot.cybercapture.ui.SubUI;
 import de.zugpilot.cybercapture.ui.UI;
 import de.zugpilot.cybercapture.ui.element.impl.ClickableUIElement;
@@ -15,24 +17,23 @@ import org.bukkit.entity.Player;
 import java.util.List;
 import java.util.Optional;
 
-public class GenerationUI extends SubUI {
-    public GenerationUI(CyberGame cyberGame, UI parent) {
-        super(cyberGame, "§aProzessoren", 3, parent);
+public class GenerationUI extends ComputerSubUI {
+
+    public GenerationUI(CyberGame cyberGame, Computer computer, UI parent) {
+        super(cyberGame, computer, parent);
     }
 
-    public void build(Player opened) {
+    public void build() {
         this.fill(new ItemBuilder(Material.GRAY_STAINED_GLASS_PANE).displayName("§f").build());
-        List<AbstractCyberProcess> generatingList = this.getCyberGame().getCyberProcessRegistry().getCyberProcessListByType(CyberProcessType.GENERATING);
+        List<CyberProcessEnum> generatingList = CyberProcessEnum.getByCategory(CyberProcessCategory.GENERATING);
         int i = 10;
-        Optional<CyberPlayer> optional = getCyberGame().getPlayerRegistry().getCyberPlayer(opened.getUniqueId());
-        if(optional.isEmpty())return;
-        CyberPlayer cyberPlayer = optional.get();
-        if(cyberPlayer.getTeam().isEmpty())return;
-        for (AbstractCyberProcess process : generatingList) {
-            GeneratingProcess generatingProcess = (GeneratingProcess) process;
+        for (CyberProcessEnum process : generatingList) {
+            GeneratingProcess generatingProcess = (GeneratingProcess) process.getCyberProcess().clone();
+            //Add dynamic elements so that we can have a "you can't buy this" thingy in the lore when you can't buy it
+            //I was too tired to do this in the night
             this.addElement(i, new ClickableUIElement(generatingProcess.getProcessIcon(), (player, slot, itemStack) -> {
-                generatingProcess.setSource(Optional.of(cyberPlayer));
-                cyberPlayer.getTeam().get().getComputer().runProcess(cyberPlayer.getTeam().get().getComputer(), generatingProcess);
+                generatingProcess.setSource(Optional.of(getComputer().getTeam()));
+                player.sendMessage(getComputer().runProcess(getComputer(), generatingProcess));
             }));
             ++i;
         }

@@ -1,4 +1,4 @@
-package de.zugpilot.cybercapture.model.game.team;
+package de.zugpilot.cybercapture.model.game;
 
 import de.zugpilot.cybercapture.CyberConstants;
 import de.zugpilot.cybercapture.model.game.CyberGame;
@@ -14,7 +14,7 @@ public class LobbySelectorUI extends UI {
     private final CyberPlayer cyberPlayer;
 
     public LobbySelectorUI(CyberGame cyberGame, CyberPlayer cyberPlayer) {
-        super(cyberGame, "§aWähle dein Team aus", 3);
+        super(cyberGame);
         this.cyberPlayer = cyberPlayer;
     }
 

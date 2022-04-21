@@ -4,8 +4,6 @@ import de.zugpilot.cybercapture.CyberConstants;
 import de.zugpilot.cybercapture.model.game.CyberGame;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
 import de.zugpilot.cybercapture.model.game.team.CyberTeam;
-import de.zugpilot.cybercapture.utils.ItemBuilder;
-import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
@@ -31,8 +29,9 @@ public class DebugCommand implements CommandExecutor {
                 CyberPlayer cyberPlayer = cyberGame.getPlayerRegistry().getCyberPlayer(player.getUniqueId()).get();
                 if(cyberPlayer.getTeam().isPresent()){
                     CyberTeam cyberTeam = cyberPlayer.getTeam().get();
-                    cyberTeam.getComputer().getComputerUI().build();
-                    cyberTeam.getComputer().getComputerUI().open(player);
+                    cyberTeam.getComputer().getMainUI().setup(cyberTeam.getColoredTeamName() + " §7Computer", 6);
+                    cyberTeam.getComputer().getMainUI().build();
+                    cyberTeam.getComputer().getMainUI().open(player);
                 }
             }
         }

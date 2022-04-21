@@ -3,13 +3,10 @@ package de.zugpilot.cybercapture.model.game.features;
 import de.zugpilot.cybercapture.CyberConstants;
 import de.zugpilot.cybercapture.model.game.CyberGame;
 import de.zugpilot.cybercapture.model.game.features.process.AbstractCyberProcess;
-import de.zugpilot.cybercapture.model.game.features.process.CyberProcessType;
-import de.zugpilot.cybercapture.model.game.features.process.types.attacking.SpyingAttackingProcess;
+import de.zugpilot.cybercapture.model.game.features.process.CyberProcessCategory;
+import de.zugpilot.cybercapture.model.game.features.process.CyberProcessEnum;
 import de.zugpilot.cybercapture.model.game.features.process.types.generating.GeneratingProcess;
-import de.zugpilot.cybercapture.model.game.features.process.types.generating.impl.AMDRyzen3;
 import de.zugpilot.cybercapture.model.game.features.process.types.protecting.ProtectingProcess;
-import de.zugpilot.cybercapture.model.game.features.process.types.protecting.impl.Avira;
-import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
 import de.zugpilot.cybercapture.model.game.team.CyberTeam;
 import lombok.Getter;
 import lombok.Setter;
@@ -22,25 +19,26 @@ import java.util.Optional;
 @Setter
 public class Computer {
 
-    private final ComputerUI computerUI;
+    private final MainUI mainUI;
     private final CyberTeam team;
     private final List<AbstractCyberProcess> processList;
     private double health;
 
     public Computer(CyberGame cyberGame, CyberTeam team) {
-        this.computerUI = new ComputerUI(cyberGame, this);
+        this.mainUI = new MainUI(cyberGame, this);
         this.team = team;
         this.processList = new LinkedList<>();
         this.health = 1000;
-        setup();
+        runDefaultProcesses();
     }
 
     /*
-    Give the player a default cpu and anti virus software
+    Run the necessary default processes like a beginner CPU, the mail process,
+    the repairing process and maybe a default Antivirus later...
      */
 
-    public void setup(){
-        this.processList.add(new AMDRyzen3());
+    public void runDefaultProcesses(){
+        this.processList.add(CyberProcessEnum.AMD_RYZEN_3.getCyberProcess().clone());
     }
 
     public void tickComputer(){
@@ -51,58 +49,55 @@ public class Computer {
         }
     }
 
-    public void runProcess(Computer otherComputer, AbstractCyberProcess cyberProcess){
-        Optional<CyberPlayer> sourcePlayer = cyberProcess.getSource();
-        if(cyberProcess.getCyberProcessType() == CyberProcessType.GENERATING){
+    public String runProcess(Computer otherComputer, AbstractCyberProcess cyberProcess){
+        String output = "";
+        if(cyberProcess.getCyberProcessCategory() == CyberProcessCategory.GENERATING){
             if(sameComputer(this, otherComputer)){
                 if(getGeneratingProcess().isPresent()){
                     GeneratingProcess attempted = (GeneratingProcess)cyberProcess;
                     GeneratingProcess current = getGeneratingProcess().get();
                     if(current.getProcessName().equals(attempted.getProcessName())){
-                        sourcePlayer.ifPresent(cyberPlayer -> cyberPlayer.getPlayer().sendMessage(CyberConstants.PREFIX + " §cDu besitzt diesen Prozessor bereits!"));
-                        return;
+                        return "§cEs wird bereits dieser Prozessor verwendet.";
                     }
                     if(attempted.getTier() - 1 != current.getTier()){
-                        sourcePlayer.ifPresent(cyberPlayer -> cyberPlayer.getPlayer().sendMessage(CyberConstants.PREFIX + " §cDu musst ein Vorgängermodell besitzen, um diesem Prozessor zu kaufen!"));
-                        return;
+                        return "§cBitte kaufe zu erst die Vorgängermodelle!";
                     }
                     processList.remove(current);
-                    sourcePlayer.ifPresent(cyberPlayer -> cyberPlayer.getPlayer().sendMessage(CyberConstants.PREFIX + " §aDu hast den Prozessor " + attempted.getColoredProcessName() + " §aerfolgreich gekauft."));
+                    output = "§aDer Prozessor " + cyberProcess.getColoredProcessName() + " §awurde erfolgreich gekauft und ausgerüstet.";
                 }
             }
         }
-        if(cyberProcess.getCyberProcessType() == CyberProcessType.PROTECTING){
+        if(cyberProcess.getCyberProcessCategory() == CyberProcessCategory.PROTECTING){
             if(!sameComputer(this, otherComputer)){
-                return;
+                return "§cDiese Nachricht sollte gar nicht erscheinen! Bitte bei ZugPilot (Dev) mit dem Hinweis 'PROT_SAME_COMPUTER' melden";
             }
             if(getProtectingProcess().isPresent()){
-                sourcePlayer.ifPresent(cyberPlayer -> cyberPlayer.getPlayer().sendMessage(CyberConstants.PREFIX + " §cEs läuft bereits eine Antiviren Software auf diesem PC."));
-                return;
+                return "§cEs läuft bereits eine Antiviren Software auf diesem PC!";
             }
             getTeam().teamMessage(CyberConstants.PREFIX + " §aAntiviren Software " + cyberProcess.getColoredProcessName() + " §awurde erfolgreich gestartet!");
             getTeam().teamMessage(CyberConstants.PREFIX + " §aLaufdauer: " + cyberProcess.getProcessDuration() + " §aSekunden");
         }
-        if(cyberProcess.getCyberProcessType() == CyberProcessType.ATTACKING){
+        if(cyberProcess.getCyberProcessCategory() == CyberProcessCategory.ATTACKING){
             if(sameComputer(this, otherComputer)){
-                sourcePlayer.ifPresent(cyberPlayer -> cyberPlayer.getPlayer().sendMessage(CyberConstants.PREFIX + " §cDu kannst dein eigenes Team nicht angreifen!"));
-                return;
+                return "§cDu kannst dein eigenes Team nicht angreifen!";
             }
             for(AbstractCyberProcess process : getProcessList()){
-                if(process instanceof SpyingAttackingProcess spyingAttack){
-                    if(spyingAttack.getSource().isPresent() && spyingAttack.getSource().get().getTeam().isPresent()){
-                        spyingAttack.getSource().get().getTeam().get().teamMessage("§8[§5Keylogger§8] §c" + getTeam().getColoredTeamName() + " §8-> " + otherComputer.getTeam().getColoredTeamName());
-                        spyingAttack.getSource().get().getTeam().get().teamMessage("§8[§5Keylogger§8] §cAngriff: " + cyberProcess.getColoredProcessName());
+                if(process.getProcessName().equalsIgnoreCase("keylogger")){
+                    if(process.getSource().isPresent()){
+                        process.getSource().get().teamMessage("§8[§5Keylogger§8] §c" + getTeam().getColoredTeamName() + " §8-> " + otherComputer.getTeam().getColoredTeamName());
+                        process.getSource().get().teamMessage("§8[§5Keylogger§8] §cAngriff: " + cyberProcess.getColoredProcessName());
                     }
                 }
             }
             if(otherComputer.handleProtection() == ProtectionResponse.FILTERED){
                 otherComputer.getTeam().teamMessage(CyberConstants.PREFIX + " §cEin Angriff wurde gefiltert!");
                 otherComputer.getTeam().teamMessage(CyberConstants.PREFIX + " §cAngriff:" + cyberProcess.getColoredProcessName());
-                return;
+                return "";
             }
         }
         cyberProcess.tick(this);
         otherComputer.processList.add(cyberProcess);
+        return output;
     }
 
     public boolean sameComputer(Computer computer1, Computer computer2){
@@ -111,7 +106,7 @@ public class Computer {
 
     public Optional<ProtectingProcess> getProtectingProcess(){
         for(AbstractCyberProcess process : getProcessList()){
-            if(process.getCyberProcessType() == CyberProcessType.PROTECTING){
+            if(process.getCyberProcessCategory() == CyberProcessCategory.PROTECTING){
                 return Optional.of((ProtectingProcess) process);
             }
         }
@@ -120,7 +115,7 @@ public class Computer {
 
     public Optional<GeneratingProcess> getGeneratingProcess(){
         for(AbstractCyberProcess process : getProcessList()){
-            if(process.getCyberProcessType() == CyberProcessType.GENERATING){
+            if(process.getCyberProcessCategory() == CyberProcessCategory.GENERATING){
                 return Optional.of((GeneratingProcess) process);
             }
         }

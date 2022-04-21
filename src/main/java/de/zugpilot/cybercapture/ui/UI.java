@@ -18,16 +18,13 @@ import java.util.UUID;
 public abstract class UI {
 
     private final CyberGame cyberGame;
-    private final Inventory output;
-    private final String title;
-    private final int rows;
+    private Inventory output;
+    private String title;
+    private int rows;
     private final Map<Integer, UIElement> elements;
 
-    public UI(CyberGame cyberGame, String title, int rows){
+    public UI(CyberGame cyberGame){
         this.cyberGame = cyberGame;
-        this.title = title;
-        this.rows = rows;
-        this.output = Bukkit.createInventory(null, 9 * rows, Component.text(title));
         this.elements = new HashMap<>();
     }
 
@@ -37,6 +34,12 @@ public abstract class UI {
 
     public void removeElement(int slot){
         this.elements.remove(slot);
+    }
+
+    public void setup(String title, int rows){
+        this.title = title;
+        this.rows = rows;
+        this.output = Bukkit.createInventory(null, 9 * rows, Component.text(title));
     }
 
     public void build(){

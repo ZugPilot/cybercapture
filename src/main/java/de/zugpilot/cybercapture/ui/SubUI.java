@@ -8,15 +8,14 @@ import org.bukkit.Material;
 import org.bukkit.entity.Player;
 
 @Getter
-public abstract class SubUI extends UI{
+public abstract class SubUI extends UI {
 
     private final UI parent;
 
-    public SubUI(CyberGame cyberGame, String title, int rows, UI parent) {
-        super(cyberGame, title, rows);
+    public SubUI(CyberGame cyberGame, UI parent) {
+        super(cyberGame);
         this.parent = parent;
     }
-
 
     public void open(Player player) {
         this.parent.close(player);
@@ -31,4 +30,5 @@ public abstract class SubUI extends UI{
         }));
         super.build();
     }
+
 }

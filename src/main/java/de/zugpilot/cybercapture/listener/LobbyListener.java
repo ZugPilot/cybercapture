@@ -4,7 +4,7 @@ import de.zugpilot.cybercapture.CyberConstants;
 import de.zugpilot.cybercapture.model.game.CyberGame;
 import de.zugpilot.cybercapture.model.game.GameState;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
-import de.zugpilot.cybercapture.model.game.team.LobbySelectorUI;
+import de.zugpilot.cybercapture.model.game.LobbySelectorUI;
 import org.bukkit.GameMode;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
@@ -54,6 +54,7 @@ public class LobbyListener implements Listener {
                 case LOBBY:
                     if(itemStack.getType() == Material.COMPASS){
                         LobbySelectorUI teamSelectorUI = new LobbySelectorUI(cyberGame, cyberPlayer);
+                        teamSelectorUI.setup("§aBitte ein Team auswählen!", 3);
                         teamSelectorUI.build();
                         teamSelectorUI.open(player);
                     }

@@ -1,6 +1,8 @@
 package de.zugpilot.cybercapture.model.game.features.process.types.attacking.ui;
 
 import de.zugpilot.cybercapture.model.game.CyberGame;
+import de.zugpilot.cybercapture.model.game.features.Computer;
+import de.zugpilot.cybercapture.model.game.features.ComputerSubUI;
 import de.zugpilot.cybercapture.model.game.features.process.types.attacking.AttackingProcess;
 import de.zugpilot.cybercapture.model.game.player.CyberPlayer;
 import de.zugpilot.cybercapture.model.game.team.CyberTeam;
@@ -12,14 +14,15 @@ import org.bukkit.Material;
 
 import java.util.Optional;
 
-public class SelectTeamToAttackUI extends SubUI
+public class SelectTeamToAttackUI extends ComputerSubUI
 {
     private final AttackingProcess attackingProcess;
 
-    public SelectTeamToAttackUI(final CyberGame cyberGame, final AttackingProcess attackingProcess, final String title, final int rows, final UI parent) {
-        super(cyberGame, title, rows, parent);
+    public SelectTeamToAttackUI(CyberGame cyberGame, Computer computer, AttackingProcess attackingProcess, UI parent) {
+        super(cyberGame, computer, parent);
         this.attackingProcess = attackingProcess;
     }
+
 
     @Override
     public void build() {
@@ -27,12 +30,8 @@ public class SelectTeamToAttackUI extends SubUI
         int i = 10;
         for (final CyberTeam team : this.getCyberGame().getTeamRegistry().getTeams()) {
             this.addElement(i, new ClickableUIElement(team.getTeamIcon(), (player, slot, itemStack1) -> {
-                Optional<CyberPlayer> optional = getCyberGame().getPlayerRegistry().getCyberPlayer(player.getUniqueId());
-                if(optional.isEmpty())return;
-                CyberPlayer cyberPlayer = optional.get();
-                if(cyberPlayer.getTeam().isEmpty())return;
-                attackingProcess.setSource(Optional.of(cyberPlayer));
-                cyberPlayer.getTeam().get().getComputer().runProcess(team.getComputer(), attackingProcess);
+                attackingProcess.setSource(Optional.of(getComputer().getTeam()));
+                getComputer().runProcess(team.getComputer(), attackingProcess);
             }));
             ++i;
         }

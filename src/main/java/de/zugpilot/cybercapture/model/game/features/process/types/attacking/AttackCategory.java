@@ -6,7 +6,7 @@ import org.bukkit.Material;
 
 @Getter
 @AllArgsConstructor
-public enum AttackVector {
+public enum AttackCategory {
 
     MALWARE("§cMalware", new String[]{"§cMalware ist eine einfache und günstige Art einem Gegner zu schaden"}, Material.IRON_SWORD),
     ENCRYPTION("§cEncryption", new String[]{"§cEncrypte den Computer deines Gegners mit einem Crypto-Trojaner", "§cDein Gegner muss seinen Computer dann mit Points freikaufen, um ihn wieder nutzen zu können."}, Material.BARRIER),

@@ -91,4 +91,16 @@ public class CyberTeam {
         NOT_PLAYED,
     }
 
+    public void subtractPoints(double amount){
+        if(getPoints() - amount > 0){
+            setPoints(getPoints() - amount);
+        }else{
+            setPoints(0);
+        }
+    }
+
+    public void addPoints(double amount){
+        setPoints(getPoints() + amount);
+    }
+
 }
